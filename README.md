@@ -10,6 +10,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#project-team">Project Team</a></li>
     <li><a href="#project-objective">Project Objective</a></li>
     <li><a href="#background">Background</a></li>
     <li><a href="#references">References</a></li>
@@ -17,11 +18,17 @@
 </details>
 
 ## Introduction
+
+
+## Project Team
 Guidance Professor: Dr. Yokesh Babu S, School of Computer Science and Engineering, VIT Vellore.
 
+Team members:
 
-
-
+|Sl.No. | Name  | Registration No. |
+|-| ------------- |:-------------:|
+|1|   Arjun Das      | 20BDS0129     |
+|2| Nishanth RB      | 20BCE2406     |
 
 
 
