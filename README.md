@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/arjundas1/DRAM-Addressing-Attack">
-    <img alt="Screenshot 2021-09-09 at 11 57 30 PM" src="https://media.geeksforgeeks.org/wp-content/uploads/20200501212758/DRAM1.png" width="650" height="300">
+    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20200501212758/DRAM1.png" width="650" height="300">
   </a>
 </p>
 
