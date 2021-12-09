@@ -24,9 +24,6 @@
 #include <iterator>
 #include <math.h>
 
-// #define THESET 
-
-// long long unsigned int syncTime = 100;
 long long unsigned int syncTime = 5e8;
 int theSet = 5;
 int validIndices [100];
@@ -47,7 +44,6 @@ uint64_t rdtsc() {
 	return a;
 }
 
-// ----------------------------------------------
 uint64_t rdtsc2() {
 	uint64_t a, d;
 	asm volatile ("rdtscp" : "=a" (a), "=d" (d) : : "rcx");
@@ -63,9 +59,7 @@ void flush(void* p) {
 			: "rax");
 }
 
-// #define assert(X) do { if (!(X)) { fprintf(stderr,"assertion '" #X "' failed\n"); exit(-1); } } while (0)
 int pagemap = -1;
-// Extract the physical page number from a Linux /proc/PID/pagemap entry.
 uint64_t frame_number_from_pagemap(uint64_t value) {
 	return value & ((1ULL << 54) - 1);
 }
@@ -75,8 +69,6 @@ uint64_t getTiming(void* first) {
 	for (int i = 0; i < 4; i++) {
 		size_t number_of_reads = num_reads;
 		volatile size_t *f = (volatile size_t *) first;
-		// volatile size_t *s = (volatile size_t *) second;
-
 		for (int j = 0; j < 10; j++)
 			sched_yield();
 		size_t t0 = rdtsc();
@@ -84,12 +76,7 @@ uint64_t getTiming(void* first) {
 		while (number_of_reads-- > 0) {
 			*f;
 			*(f + number_of_reads);
-
-			// *s;
-			// *(s + number_of_reads);
-
 			asm volatile("clflush (%0)" : : "r" (f) : "memory");
-			// asm volatile("clflush (%0)" : : "r" (s) : "memory");
 		}
 
 		uint64_t res = (rdtsc2() - t0) / (num_reads);
@@ -140,11 +127,6 @@ size_t get_dram_mapping(void* phys_addr_p) {
 	for (size_t i = 0; i < count; i++) {
 		hash3 ^= (phys_addr >> h3[i]) & 1;
 	}
-	// count = sizeof(h4) / sizeof(h4[0]);
-	// size_t hash4 = 0;
-	// for (size_t i = 0; i < count; i++) {
-	//   hash4 ^= (phys_addr >> h4[i]) & 1;
-	// }
 	return (hash3 << 3) | (hash2 << 2) | (hash1 << 1) | hash;
 }
 
@@ -153,10 +135,7 @@ uint64_t get_physical_addr(uint64_t virtual_addr) {
 	off_t offset = (virtual_addr / 4096) * sizeof(value);
 	int got = pread(pagemap, &value, sizeof(value), offset);
 	assert(got == 8);
-
-	// Check the "page present" flag.
 	assert(value & (1ULL << 63));
-
 	uint64_t frame_num = frame_number_from_pagemap(value);
 	return (frame_num * 4096) | (virtual_addr & (4095));
 }
@@ -176,8 +155,6 @@ int main()
 
 	pagemap = open("/proc/self/pagemap", O_RDONLY);
 	assert(pagemap >= 0);
-
-	////////////////////////finished setting up page mapping///////////////////////////////////
 	int arr[arraySize];
 	for (int i = 0 ; i < arraySize ; i ++)
 	{
@@ -187,7 +164,7 @@ int main()
 	for (int i = 0; i < arraySize; i += 64/sizeof(int)) {
 		size_t setx = get_dram_mapping((void*)get_physical_addr((uint64_t)(arr+i)));
 		size_t rowx = get_dram_row((void*)get_physical_addr((uint64_t)(arr+i)));
-		// printf("set = %u, addr = %lu, phyaddr = %lu\n", setx, arr+i, get_physical_addr((uint64_t)(arr+i)));
+
 		if (numValidIndices < 100 && setx == theSet) {
 			validIndices[numValidIndices] = i;
 			numValidIndices++;
@@ -206,8 +183,6 @@ int main()
 	while(toTransmit[toTransmitlen] != '\0') toTransmitlen++;
 	lenInitialTransmit = initialTransmit.length();
 	printf("Sending %s\n", toTransmit);
-	// toTransmit = (toTransmit << 4) + 5; // append 101111111111 at the end.
-	// toTransmit = (toTransmit << 12) + (3071); // append 101111111111 at the end.
 	currentTime = rdtsc()/syncTime;
 	while (rdtsc()/syncTime <= currentTime) ;
 	int i = 0;
@@ -219,16 +194,15 @@ int main()
 			if ((initialTransmit >> i) % 2)
 			{
 				uint64_t time = getTiming(arr + chosenIndex);
-				// printf("time = %lu\n", time);
 			}
 		}
 		currentTime ++;
 	}
 	printf("sent initial synchronising sequence\n");
-	for (i=0 ; i < toTransmitlen ; i ++) //len of initial Tranmit
+	for (i=0 ; i < toTransmitlen ; i ++) 
 	{
 		int num = toTransmit[i];
-		// printf("num : %d\n", num);
+
 		for (int j = 0; j < 8; j++){
 
 			while(rdtsc()/syncTime == currentTime)
@@ -236,7 +210,6 @@ int main()
 				if ((num >> j) % 2)
 				{
 					uint64_t time = getTiming(arr + chosenIndex);
-					// printf("time = %lu\n", time);
 				}
 			}
 			currentTime ++;
@@ -245,14 +218,7 @@ int main()
 	}
 	for ( i=0; i < 8 ; i ++) //len of initial Tranmit
 	{
-		while(rdtsc()/syncTime == currentTime)
-		{
-			// if ((initialTransmit >> i) % 2)
-			// {
-			// 	uint64_t time = getTiming(arr + chosenIndex);
-			// 	// printf("time = %lu\n", time);
-			// }
-		}
+		while(rdtsc()/syncTime == currentTime){}
 		currentTime ++;
 	}
 	printf("sent \\0 for synchronising\n");
