@@ -1,2 +1,0 @@
-#ifndef ATTACKTOOLS_H
-#define ATTACKTOOLS_H
