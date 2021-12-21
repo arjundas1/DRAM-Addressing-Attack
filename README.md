@@ -47,6 +47,22 @@ Team members:
 
 ## Project Objective
 
+The purpose of this project is to explore cross-CPU
+side channel attacks, thereby understanding its wide applications. Exploiting the
+addressing of DRAM and the presence of its buffers in each bank of the DRAM
+modules has been given prime focus. It is essential to gain information of the
+mapping of the physical address of the DRAM bank, for which reverse
+engineering methods have been discussed and implemented. Such mapping may
+be helpful for speeding up a row hammer attack. 
+
+The publicly available
+information on the existing methods of DRAM exploitation have been studied
+and built further. Reverse engineering, followed by verification of the mapping
+have been implemented on the 9
+th generation of Intel’s i7 processor.
+Furthermore, a covert channel of communication has been established between
+two processes that are running on the same machine, just like a cloud computing
+environment.
 
 
 ## Background
